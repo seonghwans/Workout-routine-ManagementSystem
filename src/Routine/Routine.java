@@ -1,8 +1,13 @@
 package Routine;
 
-import java.util.Scanner;
+import java.io.Serializable;
 
-public class Routine {
+public abstract class Routine implements RoutineInput, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6604979378878701387L;
+	
 	protected RoutineKind kind = RoutineKind.LowerBody;
 	protected String event;
 	protected int frequency;
@@ -64,37 +69,5 @@ public class Routine {
 		this.weight = weight;
 	}
 	
-	public void printInfo() {
-		String skind = "none";
-		switch(this.kind){
-		case UpperBody:
-			skind = "Upper.";
-			break;
-		case LowerBody:
-			skind = "Lower.";
-			break; 
-		case CoreExercise:
-			skind = "Core.";
-			break;
-		default:
-				
-		}
-		System.out.println("kind : "+ skind + "event : " +event + "\n"+ "frequency : " +frequency +"\n"+ "weight :" + weight+ "kg" + "\n");
-	}
-	
-
-	
-	public void getUserInput(Scanner input) {
-		System.out.print("Event : ");
-		String event = input.next();
-		this.setEvent(event);
-		
-		System.out.print("Frequency : ");
-		int frequency = input.nextInt();
-		this.setFrequency(frequency);
-		
-		System.out.print("Weight : ");
-		int weight = input.nextInt();
-		this.setWeight(weight);
-	}
+	public abstract void printInfo();
 }

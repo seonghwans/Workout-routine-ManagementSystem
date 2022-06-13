@@ -1,57 +1,85 @@
 package manager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import Routine.CoreExercise;
 import Routine.LowerBody;
 import Routine.Routine;
+import Routine.RoutineInput;
 import Routine.RoutineKind;
 import Routine.UpperBody;
 
-public class RoutineManager {
-	ArrayList<Routine> routines = new ArrayList<Routine>();
-	Scanner input;
+public class RoutineManager implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3363874260422332818L;
+	
+	ArrayList<RoutineInput> routines = new ArrayList<RoutineInput>();
+	transient Scanner input;
 	RoutineManager(Scanner input){
 		this.input=input;
 	}
+
+	public void addRoutine(String event, int frequency, int weight) {
+		RoutineInput routineInput = new LowerBody(RoutineKind.LowerBody);
+		routineInput.getUserInput(input);
+		routines.add(routineInput);
+	}
 	
-	
+	public void addRoutine(RoutineInput routineInput) {
+		routines.add(routineInput);
+	}
+
 	public void addRoutine() {
 		int kind = 0;
-		Routine routine;
+		RoutineInput routineInput;
 		while (kind != 1 && kind !=2) {	
-		System.out.println(" 1 for LowerBody  ");
-		System.out.println(" 2 for UpperBody  ");
-		System.out.println(" 3 for Core Exercise  ");
-		System.out.print(" Select Routine Kind 1~3 : ");
+			try {
+				System.out.println(" 1 for LowerBody  ");
+				System.out.println(" 2 for UpperBody  ");
+				System.out.println(" 3 for Core Exercise  ");
+				System.out.print(" Select Routine Kind 1~3 : ");
 
-		kind = input.nextInt();
-		if (kind == 1) {
-			routine = new LowerBody(RoutineKind.LowerBody);
-			routine.getUserInput(input);
-			routines.add(routine);
-			break;
+				kind = input.nextInt(); 
+				if (kind == 1) {
+					routineInput = new LowerBody(RoutineKind.LowerBody);
+					routineInput.getUserInput(input);
+					routines.add(routineInput);
+					break;
+				}
+				else if (kind ==2) {
+					routineInput = new UpperBody(RoutineKind.UpperBody);
+					routineInput.getUserInput(input);
+					routines.add(routineInput);
+					break;
+				}
+				else if (kind ==3) {
+					routineInput = new CoreExercise(RoutineKind.CoreExercise); 
+					routineInput.getUserInput(input);
+					routines.add(routineInput);
+					break;
+				}
+				else {
+					System.out.print(" Select Routine Kind 1~4 ");
+				}
+
+			}
+			catch(InputMismatchException e) {
+				System.out.println(" *Please put a number between 1 - 3!! *");
+				if(input.hasNext()) {
+					input.next();
+				}
+				kind = -1;
+
+			}
 		}
-		else if (kind ==2) {
-			routine = new UpperBody(RoutineKind.UpperBody);
-			routine.getUserInput(input);
-			routines.add(routine);
-			break;
-		}
-		else if (kind ==3) {
-			routine = new CoreExercise(RoutineKind.CoreExercise); 
-			routine.getUserInput(input);
-			routines.add(routine);
-			break;
-		}
-		else {
-			System.out.print(" Select Routine Kind 1~4 ");
-		}
+
 	}
-			
-	}
-	
+
 	public void deleteRoutine() {
 		System.out.print("Event : ");
 		String event = input.next();
@@ -64,22 +92,20 @@ public class RoutineManager {
 		}
 		if (index >=0 ) {
 			routines.remove(index);
-			System.out.println("this routine"+ event +"is deleted");
-			
+			System.out.println("this routine"+ event +" is deleted");
+
 		}
 		else {
 			System.out.println("there are no events");
 			return;
 		}
-	
-	
 	}
 	public void editRoutine() {
 		System.out.print("Event : ");
 		String routineEvent = input.next();
 		for(int i= 0; i<routines.size(); i++) {
-			Routine routine = routines.get(i);
-			if(routine.getEvent().equals(routineEvent)){
+			RoutineInput routineInput = routines.get(i);
+			if(routineInput.getEvent().equals(routineEvent)){
 				int num = -1;
 				while (num != 4) {
 					System.out.println("1. Edit event");
@@ -92,35 +118,43 @@ public class RoutineManager {
 					if(num==1) {
 						System.out.println("Event : ");
 						String event = input.next();
-						routine.setEvent(event);
-						
+						routineInput.setEvent(event);
+
 					}
 					else if(num==2) {
 						System.out.println("frequency : ");
 						int frequency = input.nextInt();
-						routine.setFrequency(frequency);
+						routineInput.setFrequency(frequency);
 					}
 					else if(num==3) {
 						System.out.println("weigh : ");
 						int weight = input.nextInt();
-						routine.setWeight(weight);
+						routineInput.setWeight(weight);
 					}
 					else {
 						continue;
 					}
 				}
 				break;
-		}
+			}
 
 		}
 	}
 	public void viewRoutines() {
-//		System.out.print("Event : ");
-//		String event = input.next();
-		System.out.println("# of registered events : " +routines.size());
+		//		System.out.print("Event : ");
+		//		String event = input.next();
+		System.out.println("The number of Registered events : " +routines.size());
 		for(int i= 0; i<routines.size(); i++) {
 			routines.get(i).printInfo();
 		}
 	}
+	
+	public int size() {
+		return routines.size();
+	}
+	public RoutineInput get(int index) {
+		return (Routine) routines.get(index);
+	}
+	
 }
 

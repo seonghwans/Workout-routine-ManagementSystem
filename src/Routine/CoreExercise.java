@@ -2,7 +2,7 @@ package Routine;
 
 import java.util.Scanner;
 
-public class CoreExercise extends Routine {
+public class CoreExercise extends Routine implements RoutineInput {
 	public CoreExercise(RoutineKind kind) {
 		super(kind);
 	}
@@ -33,7 +33,22 @@ public class CoreExercise extends Routine {
 		System.out.print("Weight : ");
 		int weight = input.nextInt();
 		this.setWeight(weight);
-		
-
+	}
+	public void printInfo() {
+		String skind = "none";
+		switch(this.kind){
+		case UpperBody:
+			skind = "Upper.";
+			break;
+		case LowerBody:
+			skind = "Lower.";
+			break; 
+		case CoreExercise:
+			skind = "Core.";
+			break;
+		default:
+				
+		}
+		System.out.println("kind : "+ skind + "event : " +event + "\n"+ "frequency : " +frequency +"\n"+ "weight :" + weight+ "kg" + "\n");
 	}
 }
